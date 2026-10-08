@@ -78,6 +78,13 @@ input[type=text]:focus{outline:none;border-color:var(--accent)}
   clip-path:polygon(0 0,100% 0,93% 50%,100% 100%,0 100%,7% 50%)}
 @media(max-width:600px){.thanks-ribbon{font-size:22px;padding:12px 44px}}
 
+.start{display:flex;flex-direction:column;align-items:center;text-align:center;gap:22px;padding:40px 24px}
+.start-lead{max-width:760px;margin:0;color:var(--ink);font-size:24px}
+.pid-box{display:flex;flex-direction:column;align-items:center;width:100%}
+.pid-box input{text-align:center}
+.start-btn{background:#ee4b4f;font-size:28px;padding:16px 44px}
+@media(max-width:600px){.start-lead{font-size:19px}.start-btn{font-size:22px}}
+
 /* Karakter seçimi */
 .chars{display:grid;grid-template-columns:1fr 1fr;gap:20px;width:100%;max-width:760px}
 /* Videodaki kırmızı kurdele butonlarla aynı görünüm */
@@ -145,7 +152,7 @@ const VIDEOLAR = {
 
 /* Seçimlerin Google E-Tablo'ya kaydı (kurulumu sonra yapacağız).
    Boş bırakılırsa kayıt gönderilmez, site yine çalışır. */
-const KAYIT_ADRESI = "";
+const KAYIT_ADRESI = "https://script.google.com/macros/s/AKfycbx-eIL0tF49znYspJWPVurO-k-AA86O9u-MOUyDV7FDGgqSwPsVcyvlEhHoAax4Y-cp/exec";
 </script>
 
 <header>
@@ -157,13 +164,15 @@ const KAYIT_ADRESI = "";
 <main class="wrap">
 
   <!-- 1. Başlangıç -->
-  <section id="scr-start" class="card">
-    <h1>Hoş geldiniz</h1>
-    <p class="lead">Bu eğitimde huzurevi yaşamından kısa sahneler izleyeceksiniz. Her sahnede bir karar anı gelecek, seçimi siz yapacaksınız.</p>
-    <label for="pid">Katılımcı numarası</label>
-    <input id="pid" type="text" autocomplete="off" placeholder="Örn. D12" maxlength="20">
-    <div class="err" id="pid-err"></div>
-    <button class="btn" id="btn-start">Başla ▶</button>
+  <section id="scr-start" class="card start">
+    <div class="thanks-ribbon">Hoş geldiniz</div>
+    <p class="lead start-lead">Ayşe Hanım ve Ahmet Bey'le huzurevinde bir günü birlikte geçireceğiz.<br>Her sahnede bir karar anı gelecek, seçimi siz yapacaksınız.</p>
+    <div class="pid-box">
+      <label for="pid">Katılımcı numarası</label>
+      <input id="pid" type="text" autocomplete="off" placeholder="Örn. D12" maxlength="20">
+      <div class="err" id="pid-err"></div>
+    </div>
+    <button class="btn start-btn" id="btn-start">Eğitime Başla ▶</button>
   </section>
 
   <!-- 2. Video sahnesi -->
@@ -363,10 +372,8 @@ document.querySelectorAll(".choice").forEach(b=> b.onclick = ()=>{
   oynat(v, KARAKTER_AD[durum.karakter] + " – " + s.ad + " (" + opt + ")", ()=> devamGoster(s));
 });
 function devamGoster(s){
-  const sonMu = durum.i === SAHNELER.length-1;
-  $("#next-msg").textContent = sonMu ? "Tüm sahneler tamamlandı" : "Sıradaki: " + SAHNELER[durum.i+1].ad;
-  goster("ov-next");
-  $("#btn-next").focus({preventScroll:true});
+  // Sonuç videosu bitince doğrudan sıradaki sahneye geçilir (ara ekran yok)
+  sonrakiSahne();
 }
 $("#btn-next").onclick = sonrakiSahne;
 
