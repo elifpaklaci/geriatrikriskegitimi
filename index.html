@@ -66,28 +66,38 @@ input[type=text]:focus{outline:none;border-color:var(--accent)}
 /* Seçenek butonları */
 .choices{display:grid;grid-template-columns:1fr 1fr;gap:18px;width:100%;max-width:900px}
 @media(max-width:700px){.choices{grid-template-columns:1fr}}
-.choice{display:flex;align-items:center;gap:16px;text-align:left;min-height:110px;
-  padding:18px 22px;border-radius:18px;border:4px solid transparent;background:var(--panel);
-  font-size:26px;font-weight:600;color:var(--ink);box-shadow:0 3px 0 var(--line)}
-.choice .k{flex:none;width:64px;height:64px;border-radius:50%;display:grid;place-items:center;
-  color:#fff;font-size:32px;font-weight:800}
-.choice.A .k{background:var(--a)} .choice.B .k{background:var(--b)}
-.choice.A:hover{border-color:var(--a)} .choice.B:hover{border-color:var(--b)}
+.choice{display:flex;align-items:center;justify-content:center;gap:14px;text-align:center;min-height:120px;
+  padding:16px 64px;border:none;background:#ee4b4f;color:#fff;font-size:26px;font-weight:700;line-height:1.25;
+  clip-path:polygon(0 0,100% 0,93% 50%,100% 100%,0 100%,7% 50%);transition:transform .15s}
+.choice .k{flex:none;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;
+  background:#fff;color:#ee4b4f;font-size:28px;font-weight:800}
+.choice:hover{transform:scale(1.03)}
+.choice:focus-visible{outline:none;transform:scale(1.04);background:#d93a3e}
+
+.thanks-ribbon{background:#ee4b4f;color:#fff;font-size:30px;font-weight:700;padding:16px 70px;
+  clip-path:polygon(0 0,100% 0,93% 50%,100% 100%,0 100%,7% 50%)}
+@media(max-width:600px){.thanks-ribbon{font-size:22px;padding:12px 44px}}
 
 /* Karakter seçimi */
 .chars{display:grid;grid-template-columns:1fr 1fr;gap:20px;width:100%;max-width:760px}
-.char{background:var(--panel);border:4px solid transparent;border-radius:20px;padding:22px 16px;
-  display:flex;flex-direction:column;align-items:center;gap:10px;font-size:28px;font-weight:700;color:var(--ink);
-  box-shadow:0 3px 0 var(--line)}
-.char:hover{border-color:var(--accent)}
-.char .face{font-size:84px;line-height:1}
+/* Videodaki kırmızı kurdele butonlarla aynı görünüm */
+.char{background:#ee4b4f;color:#fff;border:none;min-height:110px;padding:18px 56px;
+  font-size:34px;font-weight:700;letter-spacing:.3px;
+  clip-path:polygon(0 0,100% 0,92% 50%,100% 100%,0 100%,8% 50%);
+  filter:drop-shadow(0 4px 0 #b83236);transition:transform .15s}
+.char:hover{transform:scale(1.04)}
+.char:focus-visible{outline:none;transform:scale(1.06);background:#d93a3e}
 
+@media(max-width:700px){
+  .stage.has-ov{aspect-ratio:auto;min-height:56vw}
+  .stage.has-ov .overlay{position:relative;inset:auto;min-height:56vw}
+}
 @media(max-width:600px){
   body{font-size:18px}
   h1{font-size:28px} h2{font-size:22px}
-  .choice{font-size:20px;min-height:80px}
-  .choice .k{width:48px;height:48px;font-size:24px}
-  .char{font-size:22px}.char .face{font-size:60px}
+  .choice{font-size:20px;min-height:90px;padding:12px 40px}
+  .choice .k{width:40px;height:40px;font-size:22px}
+  .char{font-size:24px;min-height:80px;padding:12px 36px}
   .btn{font-size:22px;min-height:60px}
   .overlay{gap:12px;padding:14px}
 }
@@ -106,7 +116,7 @@ input[type=text]:focus{outline:none;border-color:var(--accent)}
    ================================================================== */
 const VIDEOLAR = {
   giris:   "https://youtu.be/EnI8IW9En0M",   // 1 Giriş - ORTAK
-  kapanis: "",   // 27 Kapanış - ORTAK
+  kapanis: "https://youtu.be/TbuIo0DIwtk",   // 27 Kapanış - ORTAK
 
   ayse: {
     s1:  { karar: "", A: "", B: "" },
@@ -123,13 +133,13 @@ const VIDEOLAR = {
   ahmet: {
     s1:  { karar: "https://youtu.be/Ko5f-Q7u15I", A: "https://youtu.be/yP-YxKLXyZM", B: "https://youtu.be/tBz_sg0Lj0s" },
     s2:  { karar: "https://youtu.be/OouUhpu-J8c", A: "https://youtu.be/Jis-gCZl-54", B: "https://youtu.be/YDjfEUXaA1g" },
-    s3:  { karar: "https://youtu.be/qEuAT3ELTm8", A: "https://youtu.be/WmMJ7rnO8lY", B: "" },
-    s4:  { karar: "", A: "", B: "" },
-    s5:  { karar: "", A: "", B: "" },
-    s6:  { karar: "", A: "", B: "" },
-    s78: "",                               // Senaryo 7-8 (düz video)
-    s9:  { karar: "", A: "", B: "" },
-    s10: { karar: "", A: "", B: "" },
+    s3:  { karar: "https://youtu.be/qEuAT3ELTm8", A: "https://youtu.be/WmMJ7rnO8lY", B: "https://youtu.be/yXF3EaG8yt4" },
+    s4:  { karar: "https://youtu.be/BjxAySZ7-xU", A: "https://youtu.be/oI5bkaTOSHE", B: "https://youtu.be/1ST5iXhiZAQ" },
+    s5:  { karar: "https://youtu.be/rrnGOCFIqa4", A: "https://youtu.be/EaVeXOpwvLc", B: "https://youtu.be/XFjpfaNLlf0" },
+    s6:  { karar: "https://youtu.be/IrIhZonuNXo", A: "https://youtu.be/516QrDES6YM", B: "https://youtu.be/CsnrcXz0CkQ" },
+    s78: "https://youtu.be/yvP-uzXlVgI",                               // Senaryo 7-8 (düz video)
+    s9:  { karar: "https://youtu.be/hL2JgEUXdmQ", A: "https://youtu.be/HsVXB7SdELU", B: "https://youtu.be/3nTUr6bIQbw" },
+    s10: { karar: "https://youtu.be/Z7rj4czjenc", A: "https://youtu.be/PXeLcEPkhFc", B: "https://youtu.be/gJ8A6mWYku4" },
   },
 };
 
@@ -172,8 +182,8 @@ const KAYIT_ADRESI = "";
       <div class="overlay hidden" id="ov-char">
         <h2>Bugün kimin gözünden bakmak istersiniz?</h2>
         <div class="chars">
-          <button class="char" data-char="ayse"><span class="face" aria-hidden="true">👵</span>Ayşe Hanım</button>
-          <button class="char" data-char="ahmet"><span class="face" aria-hidden="true">👴</span>Ahmet Bey</button>
+          <button class="char" data-char="ahmet">Ahmet Bey</button>
+          <button class="char" data-char="ayse">Ayşe Hanım</button>
         </div>
         <button class="btn ghost" data-replay>↺ Videoyu tekrar izle</button>
       </div>
@@ -197,8 +207,9 @@ const KAYIT_ADRESI = "";
 
       <!-- Bitiş -->
       <div class="overlay hidden" id="ov-end">
-        <h2>Eğitimi tamamladınız</h2>
-        <p class="lead" style="margin:0">Katıldığınız için teşekkür ederiz.</p>
+        <div class="thanks-ribbon">Eğitim tamamlandı</div>
+        <h2 style="font-size:32px">Eğitime katıldığınız için teşekkür ederiz.</h2>
+        <p class="lead" style="margin:0">Bugün öğrendiklerinizi günlük hayatınızda uygulamanız dileğiyle… Sağlıklı günler!</p>
         <button class="btn ghost" data-replay>↺ Son videoyu tekrar izle</button>
       </div>
     </div>
@@ -242,6 +253,7 @@ function ytId(link){
 function goster(id){
   ["ov-char","ov-choice","ov-next","ov-end"].forEach(x=>$("#"+x).classList.toggle("hidden", x!==id));
   $("#btn-skip").style.visibility = id ? "hidden" : "visible";
+  $("#stage").classList.toggle("has-ov", !!id);
 }
 function ilerleme(){
   const toplam = SAHNELER.length + 2;
