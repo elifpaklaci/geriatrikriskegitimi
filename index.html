@@ -56,7 +56,7 @@ input[type=text]:focus{outline:none;border-color:var(--accent)}
 .stage{position:relative;width:100%;max-width:calc((100vh - 125px) * 16 / 9);margin:0 auto;aspect-ratio:16/9;background:#000;
   border-radius:var(--radius);overflow:hidden}
 #player,.stage iframe{position:absolute;inset:0;width:100%;height:100%}
-.overlay{position:absolute;inset:0;background:var(--bg);display:flex;overflow:hidden !important;
+.overlay{position:absolute;inset:0;z-index:3;background:var(--bg);display:flex;overflow:hidden !important;
   flex-direction:column;align-items:center;justify-content:center;gap:18px;
   padding:24px;text-align:center;overflow:auto}
 .overlay h2{margin:0}
@@ -96,6 +96,11 @@ input[type=text]:focus{outline:none;border-color:var(--accent)}
 .pid-box input{text-align:center}
 .start-btn{background:#ee4b4f;font-size:28px;padding:16px 44px}
 @media(max-width:600px){.start-lead{font-size:19px}.start-btn{font-size:22px}}
+
+#hot{position:absolute;inset:0;pointer-events:none;z-index:2}
+.hot{position:absolute;pointer-events:auto;background:transparent;border:none;padding:0;border-radius:12px}
+body.ayar .hot{background:rgba(255,230,0,.35);outline:3px dashed #ffd400}
+.hot:active{background:rgba(255,255,255,.25)}
 
 /* Karakter seçimi */
 .chars{display:grid;grid-template-columns:1fr 1fr;gap:20px;width:100%;max-width:760px}
@@ -162,6 +167,19 @@ const VIDEOLAR = {
 
 /* Seçimlerin Google E-Tablo'ya kaydı (kurulumu sonra yapacağız).
    Boş bırakılırsa kayıt gönderilmez, site yine çalışır. */
+/* Videodaki kırmızı kurdelelerin ekrana geldiği saniye (karar videoları).
+   Bu saniyeden itibaren videodaki A / B kurdelelerine dokunmak seçim yapar.
+   Boş bırakılan sahnelerde eski düzen geçerli (video bitince site kurdeleleri çıkar). */
+const KURDELE_ZAMANI = {
+  ayse:  { s1: 26, s2: 15, s3: 22 },
+  ahmet: { },
+};
+/* Kurdelelerin video içindeki yeri (videonun yüzdesi olarak) */
+const KURDELE_YERI = {
+  A: { sol: 1,  ust: 64, gen: 48, yuk: 29 },
+  B: { sol: 51, ust: 64, gen: 48, yuk: 29 },
+};
+
 const KAYIT_ADRESI = "https://script.google.com/macros/s/AKfycbx-eIL0tF49znYspJWPVurO-k-AA86O9u-MOUyDV7FDGgqSwPsVcyvlEhHoAax4Y-cp/exec";
 </script>
 
@@ -190,6 +208,11 @@ const KAYIT_ADRESI = "https://script.google.com/macros/s/AKfycbx-eIL0tF49znYspJW
   <section id="scr-video" class="hidden">
     <div class="stage" id="stage">
       <div id="player"></div>
+      <!-- Videodaki kurdelelerin üzerine görünmez dokunma alanları -->
+      <div id="hot" class="hidden">
+        <button class="hot" data-opt="A" aria-label="A seçeneği"></button>
+        <button class="hot" data-opt="B" aria-label="B seçeneği"></button>
+      </div>
 
       <!-- Video yerine geçici kutu (link girilmemişse) -->
       <div class="ph hidden" id="ph">
@@ -368,7 +391,10 @@ function bitti(){
 }
 $("#ph-done").onclick = bitti;
 $("#btn-skip").onclick = bitti;
-document.querySelectorAll("[data-replay]").forEach(b=> b.onclick = ()=> oynat(simdiki.link, simdiki.ad, simdiki.sonra));
+document.querySelectorAll("[data-replay]").forEach(b=> b.onclick = ()=>{
+  oynat(simdiki.link, simdiki.ad, simdiki.sonra);
+  if(durum.adim==="sahne" && !durum.secildi && !SAHNELER[durum.i].duz) kurdeleBaslat(SAHNELER[durum.i]);
+});
 
 /* --- Akış -------------------------------------------------------- */
 $("#btn-start").onclick = ()=>{
@@ -411,7 +437,9 @@ function sonrakiSahne(){
   if(s.duz){
     oynat(v, kisa, ()=> devamGoster(s));
   }else{
-    oynat(v.karar, kisa + " (karar)", ()=> kararGoster(s));
+    durum.secildi = false;
+    oynat(v.karar, kisa + " (karar)", ()=> { kurdeleKapat(); kararGoster(s); });
+    kurdeleBaslat(s);
   }
 }
 function kararGoster(s){
@@ -420,12 +448,34 @@ function kararGoster(s){
   goster("ov-choice");
   $("#ov-choice .choice.A").focus({preventScroll:true});
 }
-document.querySelectorAll(".choice").forEach(b=> b.onclick = ()=>{
-  const s = SAHNELER[durum.i], opt = b.dataset.opt;
+document.querySelectorAll(".choice").forEach(b=> b.onclick = ()=> secimYap(b.dataset.opt));
+document.querySelectorAll(".hot").forEach(b=> b.onclick = ()=> secimYap(b.dataset.opt));
+function secimYap(opt){
+  if(durum.secildi) return; durum.secildi = true;
+  kurdeleKapat();
+  const s = SAHNELER[durum.i];
   kaydet("secim", { sahne_kod: s.id.toUpperCase(), sahne: s.no + " – " + s.ad, secim: opt, secenek: s[opt], dogru_mu: opt===s.dogru ? "Doğru" : "Yanlış" });
   const v = VIDEOLAR[durum.karakter][s.id][opt];
   oynat(v, KARAKTER_AD[durum.karakter] + " – " + s.ad + " (" + opt + ")", ()=> devamGoster(s));
-});
+}
+
+/* --- Videodaki kurdeleleri tıklanabilir yapma ------------------- */
+let kurdeleTakip = null;
+function kurdeleKapat(){ clearInterval(kurdeleTakip); kurdeleTakip = null; $("#hot").classList.add("hidden"); }
+function kurdeleBaslat(s){
+  kurdeleKapat();
+  const t = (KURDELE_ZAMANI[durum.karakter]||{})[s.id];
+  if(t == null) return;
+  ["A","B"].forEach(k=>{
+    const y = KURDELE_YERI[k], el = document.querySelector('.hot[data-opt="'+k+'"]');
+    el.style.left = y.sol+"%"; el.style.top = y.ust+"%"; el.style.width = y.gen+"%"; el.style.height = y.yuk+"%";
+  });
+  kurdeleTakip = setInterval(()=>{
+    let now = 0; try{ now = player.getCurrentTime(); }catch(e){}
+    $("#hot").classList.toggle("hidden", !(now >= t - 0.2));
+  }, 200);
+}
+if(/[?&]ayar=1/.test(location.search)) document.body.classList.add("ayar");
 function devamGoster(s){
   durum.bitti = true; ilerleme();
   const sonraki = SAHNELER[durum.i+1];
