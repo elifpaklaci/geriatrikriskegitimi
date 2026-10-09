@@ -2,8 +2,12 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Günlük Kararlar, Sağlıklı Yarınlar</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Eğitim">
+<meta name="theme-color" content="#f6f1e9">
+<title>Bir Günüm</title>
 <style>
 /* ============================================================
    GÖRÜNÜM AYARLARI
@@ -19,15 +23,15 @@ html,body{margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);
   font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
   font-size:20px;line-height:1.45;min-height:100vh}
-button{font:inherit;cursor:pointer}
+button{font:inherit;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
 .wrap{max-width:1100px;margin:0 auto;padding:16px}
 header{display:flex;align-items:center;justify-content:space-between;gap:12px;
   padding:10px 16px;max-width:1100px;margin:0 auto}
-header .title{font-weight:700;font-size:20px;color:var(--accent)}
-header .who{font-size:18px;color:var(--muted)}
+header .title{font-weight:800;font-size:24px;color:#ee4b4f}
+header .who{font-size:19px;font-weight:600;color:var(--ink);text-align:right}
 .progress{height:10px;background:var(--line);border-radius:99px;overflow:hidden;margin:0 16px 8px;max-width:1068px}
 @media(min-width:1100px){.progress{margin:0 auto 8px}}
-.progress > div{height:100%;width:0;background:var(--accent);transition:width .4s}
+.progress > div{height:100%;width:0;background:#ee4b4f;transition:width .4s}
 .hidden{display:none !important}
 
 /* Kartlar ve ekranlar */
@@ -49,7 +53,7 @@ input[type=text]:focus{outline:none;border-color:var(--accent)}
 .err{color:#b3261e;font-weight:600;margin-top:10px;min-height:1.4em}
 
 /* Video alanı */
-.stage{position:relative;width:100%;aspect-ratio:16/9;background:#000;
+.stage{position:relative;width:100%;max-width:calc((100vh - 190px) * 16 / 9);margin:0 auto;aspect-ratio:16/9;background:#000;
   border-radius:var(--radius);overflow:hidden}
 #player,.stage iframe{position:absolute;inset:0;width:100%;height:100%}
 .overlay{position:absolute;inset:0;background:var(--bg);display:flex;
@@ -59,8 +63,12 @@ input[type=text]:focus{outline:none;border-color:var(--accent)}
 .ph{position:absolute;inset:0;background:#2b3437;color:#fff;display:flex;
   flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:20px}
 .ph code{background:#ffffff22;padding:4px 10px;border-radius:8px;font-size:20px}
-.below{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap}
-.scene-name{font-size:22px;font-weight:600}
+.below{display:flex;justify-content:center;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap}
+.scene-name{text-align:center;margin:0 0 10px;min-height:1.3em;line-height:1.2}
+.scene-name .kick{display:block;font-size:16px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#ee4b4f}
+.scene-name .ttl{display:block;font-size:28px;font-weight:800}
+.scene-name .sub{display:block;font-size:19px;color:var(--muted);margin-top:2px}
+@media(max-width:600px){.scene-name .ttl{font-size:22px}}
 .skip{background:none;border:none;color:var(--muted);text-decoration:underline;font-size:17px;padding:8px}
 
 /* Seçenek butonları */
@@ -126,15 +134,15 @@ const VIDEOLAR = {
   kapanis: "https://youtu.be/TbuIo0DIwtk",   // 27 Kapanış - ORTAK
 
   ayse: {
-    s1:  { karar: "", A: "", B: "" },
-    s2:  { karar: "", A: "", B: "" },
-    s3:  { karar: "", A: "", B: "" },
-    s4:  { karar: "", A: "", B: "" },
-    s5:  { karar: "", A: "", B: "" },
-    s6:  { karar: "", A: "", B: "" },
-    s78: "",                               // Senaryo 7-8 (düz video)
-    s9:  { karar: "", A: "", B: "" },
-    s10: { karar: "", A: "", B: "" },
+    s1:  { karar: "https://youtu.be/I72U5QrsS84", A: "https://youtu.be/IgeysDMTg5o", B: "https://youtu.be/pmQKGhdEOEU" },
+    s2:  { karar: "https://youtu.be/Ix8mGTpxEeg", A: "https://youtu.be/OkvEEgO4u2c", B: "https://youtu.be/btTiHp93GV0" },
+    s3:  { karar: "https://youtu.be/ui1rq1jeb_E", A: "https://youtu.be/PvBR809xPOk", B: "https://youtu.be/_7tK6T4tUFY" },
+    s4:  { karar: "https://youtu.be/PCr_PY-7Nzk", A: "https://youtu.be/jGRvIoiqofE", B: "https://youtu.be/sW8nI0vpd9g" },
+    s5:  { karar: "https://youtu.be/f5k4wf-MxZw", A: "https://youtu.be/T90TaCwk12g", B: "https://youtu.be/T8O-K-eO_rQ" },
+    s6:  { karar: "https://youtu.be/9nbDwyBeqKo", A: "https://youtu.be/NoqZavojXDw", B: "https://youtu.be/mzEtZHR-X7w" },
+    s78: "https://youtu.be/W8bjDUhyVAI",                               // Senaryo 7-8 (düz video)
+    s9:  { karar: "https://youtu.be/tTbn7WTTxSU", A: "https://youtu.be/dEYof3nwD9E", B: "https://youtu.be/j5J7Jy3CA50" },
+    s10: { karar: "https://youtu.be/6niUhu1sIKM", A: "https://youtu.be/KhgXmSJTf0k", B: "https://youtu.be/oaVN0bJ2j24" },
   },
 
   ahmet: {
@@ -156,7 +164,7 @@ const KAYIT_ADRESI = "https://script.google.com/macros/s/AKfycbx-eIL0tF49znYspJW
 </script>
 
 <header>
-  <div class="title">Günlük Kararlar, Sağlıklı Yarınlar</div>
+  <div class="title">Bir Günüm</div>
   <div class="who" id="who"></div>
 </header>
 <div class="progress" aria-hidden="true"><div id="bar"></div></div>
@@ -177,6 +185,7 @@ const KAYIT_ADRESI = "https://script.google.com/macros/s/AKfycbx-eIL0tF49znYspJW
 
   <!-- 2. Video sahnesi -->
   <section id="scr-video" class="hidden">
+    <div class="scene-name" id="scene-name"></div>
     <div class="stage" id="stage">
       <div id="player"></div>
 
@@ -214,6 +223,12 @@ const KAYIT_ADRESI = "https://script.google.com/macros/s/AKfycbx-eIL0tF49znYspJW
         <button class="btn ghost" data-replay>↺ Videoyu tekrar izle</button>
       </div>
 
+      <!-- Tarayıcı otomatik oynatmayı engellerse -->
+      <div class="overlay hidden" id="ov-play">
+        <div class="thanks-ribbon" id="play-name">Sıradaki sahne</div>
+        <button class="btn start-btn" id="btn-play">▶ İzlemeye devam et</button>
+      </div>
+
       <!-- Bitiş -->
       <div class="overlay hidden" id="ov-end">
         <div class="thanks-ribbon">Eğitim tamamlandı</div>
@@ -224,7 +239,6 @@ const KAYIT_ADRESI = "https://script.google.com/macros/s/AKfycbx-eIL0tF49znYspJW
     </div>
 
     <div class="below">
-      <div class="scene-name" id="scene-name"></div>
       <button class="skip" id="btn-skip">Video bitti ama ekran ilerlemedi mi? Buraya dokunun</button>
     </div>
   </section>
@@ -235,15 +249,15 @@ const KAYIT_ADRESI = "https://script.google.com/macros/s/AKfycbx-eIL0tF49znYspJW
    AKIŞ  (Ahmet Bey metnine göre; doğru şıklar 'dogru' alanında)
    ================================================================== */
 const SAHNELER = [
-  { id:"s1",  ad:"Sahne 1 – Sabah uyanma",            A:"Hemen ayağa kalkmalı",                       B:"Bir süre oturarak beklemeli",            dogru:"B" },
-  { id:"s2",  ad:"Sahne 2 – Islak zemin",             A:"Islak zeminin kenarından geçmeli",           B:"Geri çekilmeli ve yardım istemeli",      dogru:"B" },
-  { id:"s3",  ad:"Sahne 3 – Kahvaltı",                A:"Dengeli bir tabak yemeli",                   B:"Az ekmek ve çayla geçiştirmeli",         dogru:"A" },
-  { id:"s4",  ad:"Sahne 4 – Sabah ilaçları",          A:"İlaçlarını kahveyle içmeli",                 B:"İlaçlarını suyla içmeli",                dogru:"B" },
-  { id:"s5",  ad:"Sahne 5 – Öğleden sonra etkinliği", A:"Gruba katılıp sosyalleşmeli",                B:"Odada yalnız kalmalı",                   dogru:"A" },
-  { id:"s6",  ad:"Sahne 6 – Egzersiz daveti",         A:"Egzersize katılmalı",                        B:"Televizyon izlemeli",                    dogru:"A" },
-  { id:"s78", ad:"Sahne 7–8 – Yemek (su ve tuz)",     duz:true },
-  { id:"s9",  ad:"Sahne 9 – Akşam uyku hazırlığı",    A:"Odaya geçip uykuya hazırlanmalı",            B:"Salona geçip biraz daha oturmalı",       dogru:"A" },
-  { id:"s10", ad:"Sahne 10 – Gece tuvalete kalkma",   A:"Karanlıkta yürümeli, kimseyi uyandırmamalı", B:"Gece lambasını yakmalı, yavaşça kalkmalı", dogru:"B" },
+  { id:"s1", tam:1,  no:"1", ad:"Güne Güvenli Başlangıç",            A:"Hemen ayağa kalkmalı",                       B:"Bir süre oturarak beklemeli",            dogru:"B" },
+  { id:"s2", tam:2,  no:"2", ad:"Banyoda Islak Zemin",             A:"Islak zeminin kenarından geçmeli",           B:"Geri çekilmeli ve yardım istemeli",      dogru:"B" },
+  { id:"s3", tam:3,  no:"3", ad:"Güne Enerjiyle Başla",                A:"Dengeli bir tabak yemeli",                   B:"Az ekmek ve çayla geçiştirmeli",         dogru:"A" },
+  { id:"s4", tam:4,  no:"4", ad:"İlaç Saati",          A:"İlaçlarını kahveyle içmeli",                 B:"İlaçlarını suyla içmeli",                dogru:"B" },
+  { id:"s5", tam:5,  no:"5", ad:"Birlikte Daha Güzel", A:"Gruba katılıp sosyalleşmeli",                B:"Odada yalnız kalmalı",                   dogru:"A" },
+  { id:"s6", tam:6,  no:"6", ad:"Harekete Davet",         A:"Egzersize katılmalı",                        B:"Televizyon izlemeli",                    dogru:"A" },
+  { id:"s78", tam:8, no:"7–8", ad:"Sofranın İki Kuralı",     duz:true },
+  { id:"s9", tam:9,  no:"9", ad:"Uykuya Hazırlık",    A:"Odaya geçip uykuya hazırlanmalı",            B:"Salona geçip biraz daha oturmalı",       dogru:"A" },
+  { id:"s10", tam:10, no:"10", ad:"Gece Kalkışı",   A:"Karanlıkta yürümeli, kimseyi uyandırmamalı", B:"Gece lambasını yakmalı, yavaşça kalkmalı", dogru:"B" },
 ];
 const KARAKTER_AD = { ayse:"Ayşe Hanım", ahmet:"Ahmet Bey" };
 
@@ -260,14 +274,21 @@ function ytId(link){
   return m ? m[1] : "";
 }
 function goster(id){
-  ["ov-char","ov-choice","ov-next","ov-end"].forEach(x=>$("#"+x).classList.toggle("hidden", x!==id));
+  ["ov-char","ov-choice","ov-next","ov-end","ov-play"].forEach(x=>$("#"+x).classList.toggle("hidden", x!==id));
   $("#btn-skip").style.visibility = id ? "hidden" : "visible";
   $("#stage").classList.toggle("has-ov", !!id);
 }
+/* Tamamlanan sahne sayısı (7–8 tek video olduğu için 6'dan 8'e geçer) */
+const EK = {1:"'ini",2:"'sini",3:"'ünü",4:"'ünü",5:"'ini",6:"'sını",7:"'sini",8:"'ini",9:"'unu",10:"'unu"};
 function ilerleme(){
-  const toplam = SAHNELER.length + 2;
-  let n = durum.adim==="giris" ? 0 : durum.adim==="kapanis" ? toplam-1 : durum.adim==="bitti" ? toplam : durum.i+1;
-  $("#bar").style.width = (n/toplam*100)+"%";
+  let n = 0;
+  if(durum.adim==="sahne") n = durum.i>0 ? SAHNELER[durum.i-1].tam : 0;
+  if(durum.adim==="kapanis" || durum.adim==="bitti") n = 10;
+  $("#bar").style.width = (n/10*100)+"%";
+  let t = "";
+  if(durum.adim==="sahne") t = n===0 ? "İlk sahne başlıyor" : "10 sahneden " + n + EK[n] + " tamamladınız";
+  if(durum.adim==="kapanis" || durum.adim==="bitti") t = "10 sahnenin hepsini tamamladınız";
+  $("#who").textContent = t;
 }
 
 /* --- Kayıt ------------------------------------------------------- */
@@ -282,7 +303,7 @@ function kaydet(olay, ek){
   }catch(e){}
   if(!KAYIT_ADRESI) return;
   try{
-    fetch(KAYIT_ADRESI,{method:"POST",mode:"no-cors",body:new URLSearchParams(satir)});
+    fetch(KAYIT_ADRESI,{method:"POST",mode:"no-cors",body:new URLSearchParams(satir)}).catch(()=>{});
   }catch(e){}
 }
 
@@ -293,7 +314,13 @@ window.onYouTubeIframeAPIReady = function(){
     playerVars:{ rel:0, modestbranding:1, playsinline:1, controls:1, fs:1, iv_load_policy:3, cc_load_policy:0, hl:"tr" },
     events:{
       onReady:()=>{ playerHazir = true; if(bekleyen){ const b=bekleyen; bekleyen=null; oynat(b.id,b.ad,b.sonra); } },
-      onStateChange:e=>{ if(e.data===YT.PlayerState.ENDED) bitti(); }
+      onStateChange:e=>{
+        if(e.data===YT.PlayerState.ENDED) bitti();
+        if(e.data===YT.PlayerState.PLAYING || e.data===YT.PlayerState.BUFFERING){
+          clearTimeout(oynatKontrol);
+          if(!$("#ov-play").classList.contains("hidden")) goster(null);
+        }
+      }
     }
   });
 };
@@ -312,7 +339,25 @@ function oynat(link, ad, sonra){
   $("#ph").classList.add("hidden");
   if(!playerHazir){ bekleyen = { id:link, ad, sonra }; return; }
   player.loadVideoById(id);
+  oynatKontrolBaslat();
 }
+/* Bazı tarayıcılar (özellikle Safari) dokunma olmadan sesli videoyu başlatmaz.
+   Video 1,5 sn içinde başlamazsa büyük bir "İzlemeye devam et" butonu çıkar. */
+let oynatKontrol = null;
+function oynatKontrolBaslat(){
+  clearTimeout(oynatKontrol);
+  oynatKontrol = setTimeout(()=>{
+    let st = -1; try{ st = player.getPlayerState(); }catch(e){}
+    if(st !== 1 && st !== 3){
+      $("#play-name").textContent = sahneBaslik || "Sıradaki sahne";
+      goster("ov-play");
+    }
+  }, 1500);
+}
+$("#btn-play").onclick = ()=>{
+  goster(null);
+  try{ player.playVideo(); }catch(e){}
+};
 function bitti(){
   if(simdiki.sonra){ const f = simdiki.sonra; f(); }
   try{ player && player.pauseVideo(); }catch(e){}
@@ -326,7 +371,7 @@ $("#btn-start").onclick = ()=>{
   const v = $("#pid").value.trim();
   if(!v){ $("#pid-err").textContent = "Lütfen katılımcı numarasını yazın."; $("#pid").focus(); return; }
   durum.pid = v;
-  $("#who").textContent = "Katılımcı: " + v;
+  $("#who").textContent = "";
   $("#scr-start").classList.add("hidden");
   $("#scr-video").classList.remove("hidden");
   kaydet("basladi");
@@ -334,14 +379,20 @@ $("#btn-start").onclick = ()=>{
 };
 $("#pid").addEventListener("keydown", e=>{ if(e.key==="Enter") $("#btn-start").click(); });
 
+let sahneBaslik = "";
+function etiket(kick, ttl, sub){
+  sahneBaslik = ttl;
+  const el = $("#scene-name"); el.innerHTML = "";
+  [["kick",kick],["ttl",ttl],["sub",sub]].forEach(([c,t])=>{ if(t){ const x=document.createElement("span"); x.className=c; x.textContent=t; el.appendChild(x); } });
+}
 function girisOynat(){
   durum.adim = "giris"; ilerleme();
-  $("#scene-name").textContent = "Giriş";
+  etiket("", "Hoş Geldiniz", "Ayşe Hanım ve Ahmet Bey’le tanışın");
   oynat(VIDEOLAR.giris, "1 – Giriş (ortak)", ()=> goster("ov-char"));
 }
 document.querySelectorAll(".char").forEach(b=> b.onclick = ()=>{
   durum.karakter = b.dataset.char;
-  $("#who").textContent = "Katılımcı: " + durum.pid + " · " + KARAKTER_AD[durum.karakter];
+  
   kaydet("karakter_secti");
   durum.i = -1; sonrakiSahne();
 });
@@ -351,7 +402,7 @@ function sonrakiSahne(){
   if(durum.i >= SAHNELER.length){ return kapanisOynat(); }
   const s = SAHNELER[durum.i], v = VIDEOLAR[durum.karakter][s.id];
   durum.adim = "sahne"; ilerleme();
-  $("#scene-name").textContent = s.ad;
+  etiket("Sahne " + s.no, s.ad);
   const kisa = KARAKTER_AD[durum.karakter] + " – " + s.ad;
   if(s.duz){
     oynat(v, kisa, ()=> devamGoster(s));
@@ -367,7 +418,7 @@ function kararGoster(s){
 }
 document.querySelectorAll(".choice").forEach(b=> b.onclick = ()=>{
   const s = SAHNELER[durum.i], opt = b.dataset.opt;
-  kaydet("secim", { sahne: s.ad, secim: opt, secenek: s[opt], dogru_mu: opt===s.dogru ? "Doğru" : "Yanlış" });
+  kaydet("secim", { sahne_kod: s.id.toUpperCase(), sahne: s.no + " – " + s.ad, secim: opt, secenek: s[opt], dogru_mu: opt===s.dogru ? "Doğru" : "Yanlış" });
   const v = VIDEOLAR[durum.karakter][s.id][opt];
   oynat(v, KARAKTER_AD[durum.karakter] + " – " + s.ad + " (" + opt + ")", ()=> devamGoster(s));
 });
@@ -379,7 +430,7 @@ $("#btn-next").onclick = sonrakiSahne;
 
 function kapanisOynat(){
   durum.adim = "kapanis"; ilerleme();
-  $("#scene-name").textContent = "Kapanış";
+  etiket("", "Sağlıklı Günlere");
   oynat(VIDEOLAR.kapanis, "27 – Kapanış (ortak)", ()=>{
     durum.adim = "bitti"; ilerleme();
     kaydet("tamamladi");
