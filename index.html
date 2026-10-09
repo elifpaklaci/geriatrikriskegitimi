@@ -171,8 +171,9 @@ const VIDEOLAR = {
    Bu saniyeden itibaren videodaki A / B kurdelelerine dokunmak seçim yapar.
    Boş bırakılan sahnelerde eski düzen geçerli (video bitince site kurdeleleri çıkar). */
 const KURDELE_ZAMANI = {
-  ayse:  { s1: 26, s2: 15, s3: 22 },
-  ahmet: { },
+  giris: 58,   // Giriş: Ahmet Bey (sol) / Ayşe Hanım (sağ)
+  ayse:  { s1: 26, s2: 15, s3: 22, s4: 8, s5: 29, s6: 19, s9: 25, s10: 19 },
+  ahmet: { s1: 26, s2: 15, s3: 20, s4: 8, s5: 29, s6: 19, s9: 25, s10: 20 },
 };
 /* Kurdelelerin video içindeki yeri (videonun yüzdesi olarak) */
 const KURDELE_YERI = {
@@ -394,6 +395,7 @@ $("#btn-skip").onclick = bitti;
 document.querySelectorAll("[data-replay]").forEach(b=> b.onclick = ()=>{
   oynat(simdiki.link, simdiki.ad, simdiki.sonra);
   if(durum.adim==="sahne" && !durum.secildi && !SAHNELER[durum.i].duz) kurdeleBaslat(SAHNELER[durum.i]);
+  if(durum.adim==="giris" && !durum.karakter) kurdeleTakipEt(KURDELE_ZAMANI.giris);
 });
 
 /* --- Akış -------------------------------------------------------- */
@@ -418,14 +420,17 @@ function etiket(kick, ttl, sub){
 function girisOynat(){
   durum.adim = "giris"; ilerleme();
   etiket("", "Hoş Geldiniz", "Ayşe Hanım ve Ahmet Bey’le tanışın");
-  oynat(VIDEOLAR.giris, "1 – Giriş (ortak)", ()=> goster("ov-char"));
+  oynat(VIDEOLAR.giris, "1 – Giriş (ortak)", ()=> { kurdeleKapat(); goster("ov-char"); });
+  kurdeleTakipEt(KURDELE_ZAMANI.giris);
 }
-document.querySelectorAll(".char").forEach(b=> b.onclick = ()=>{
-  durum.karakter = b.dataset.char;
-  
+document.querySelectorAll(".char").forEach(b=> b.onclick = ()=> karakterSec(b.dataset.char));
+function karakterSec(c){
+  if(durum.karakter) return;
+  kurdeleKapat();
+  durum.karakter = c;
   kaydet("karakter_secti");
   durum.i = -1; sonrakiSahne();
-});
+}
 
 function sonrakiSahne(){
   durum.i++; durum.bitti = false;
@@ -449,7 +454,10 @@ function kararGoster(s){
   $("#ov-choice .choice.A").focus({preventScroll:true});
 }
 document.querySelectorAll(".choice").forEach(b=> b.onclick = ()=> secimYap(b.dataset.opt));
-document.querySelectorAll(".hot").forEach(b=> b.onclick = ()=> secimYap(b.dataset.opt));
+document.querySelectorAll(".hot").forEach(b=> b.onclick = ()=>{
+  if(durum.adim==="giris") karakterSec(b.dataset.opt==="A" ? "ahmet" : "ayse");
+  else secimYap(b.dataset.opt);
+});
 function secimYap(opt){
   if(durum.secildi) return; durum.secildi = true;
   kurdeleKapat();
@@ -463,8 +471,10 @@ function secimYap(opt){
 let kurdeleTakip = null;
 function kurdeleKapat(){ clearInterval(kurdeleTakip); kurdeleTakip = null; $("#hot").classList.add("hidden"); }
 function kurdeleBaslat(s){
+  kurdeleTakipEt((KURDELE_ZAMANI[durum.karakter]||{})[s.id]);
+}
+function kurdeleTakipEt(t){
   kurdeleKapat();
-  const t = (KURDELE_ZAMANI[durum.karakter]||{})[s.id];
   if(t == null) return;
   ["A","B"].forEach(k=>{
     const y = KURDELE_YERI[k], el = document.querySelector('.hot[data-opt="'+k+'"]');
